@@ -3,21 +3,9 @@
                 
 Vagrant.configure('2') do |config|
     config.vm.box = "ubuntu/focal64"
-    
-    (1..1).each do |nr|
-      config.vm.define "mng#{nr}" do |node|
-        node.vm.network 'private_network', ip: "192.168.100.10#{nr}"
-        node.vm.network 'forwarded_port', id: 'ssh', host: "810#{nr}", guest: "22"
-        node.vm.hostname = "mng#{nr}"
-
-      end
-    end
-
-    (1..1).each do |nr|
-      config.vm.define "wrk#{nr}" do |node|
-        node.vm.network 'private_network', ip: "192.168.100.11#{nr}"
-        node.vm.network 'forwarded_port', id: 'ssh', host: "811#{nr}", guest: "22"
-        node.vm.hostname = "wrk#{nr}"
+    [:up, :provision].each do |cmd|
+      config.trigger.before cmd do |trigger|
+        trigger.run = {inline: "./scripts/host/setup.sh"}
       end
     end
 
@@ -25,8 +13,34 @@ Vagrant.configure('2') do |config|
       node.vm.network 'private_network', ip: "192.168.100.10"
       node.vm.network 'forwarded_port', id: 'ssh', host: "8121", guest: "22"
       node.vm.hostname = "manager"
+      node.vm.provision "shell", path: "./scripts/manager/setup.sh"
     end
- 
+
+    (1..1).each do |nr|
+      config.vm.define "mng#{nr}" do |node|
+        HOST = "mng#{nr}"
+        IP = "192.168.100.10#{nr}"
+        PORT = "810#{nr}"
+        node.vm.network 'private_network', ip: IP
+        node.vm.network 'forwarded_port', id: 'ssh', host: PORT, guest: "22"
+        node.vm.hostname = HOST
+        node.vm.provision "shell", path: "./scripts/setup.sh", args: [HOST, IP]
+        node.vm.provision "shell", path: "./scripts/master/setup.sh"
+      end
+    end
+
+    (1..3).each do |nr|
+      config.vm.define "wrk#{nr}" do |node|
+        HOST = "wrk#{nr}"
+        IP = "192.168.100.11#{nr}"
+        PORT = "811#{nr}"
+        node.vm.network 'private_network', ip: IP
+        node.vm.network 'forwarded_port', id: 'ssh', host: PORT, guest: "22"
+        node.vm.hostname = HOST
+        node.vm.provision "shell", path: "./scripts/setup.sh", args: [HOST, IP]
+        node.vm.provision "shell", path: "./scripts/worker/setup.sh"
+      end
+    end
 
     config.vm.provider 'virtualbox' do |vb|
       vb.memory = '2048'
