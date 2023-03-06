@@ -1,9 +1,9 @@
 datacenter = "dc1"
 data_dir = "/opt/consul"
 
-bind_addr = "192.168.100.113"
-client_addr = "192.168.100.113"
-advertise_addr = "192.168.100.113"
+bind_addr = IP_BIND
+client_addr = IP_CLIENT
+advertise_addr = IP_ADVERTISE
 #advertise_addr = "{{ GetInterfaceIP `enp0s8` }}"
  
 bootstrap_expect = 3
@@ -11,7 +11,7 @@ bootstrap_expect = 3
 server = true
 
 retry_join = [
-  "192.168.100.111", "192.168.100.112"
+  IP_CONSUL_SERVERS
 ]
 
 ui_config{
