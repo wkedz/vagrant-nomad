@@ -18,6 +18,7 @@ client {
   enabled = true 
   servers = ["127.0.0.1:4646"]
 
+  network_interface = "enp0s8"
 
   host_volume "grafana" {
     path = "/opt/nomad-volumes/grafana"
@@ -27,7 +28,10 @@ client {
     path = "/opt/nomad-volumes/databases"
     read_only = false
   }
+}
 
+consul {                                                                                               
+  address = ADDR_CONSUL                                                                   
 }
 
 plugin "docker" {
