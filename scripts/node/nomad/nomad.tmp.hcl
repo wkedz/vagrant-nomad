@@ -1,13 +1,13 @@
 # Full configuration options can be found at https://www.nomadproject.io/docs/configuration
 datacenter = "dc1"
 data_dir   = "/opt/nomad/data"
-bind_addr  = "192.168.100.111" 
+bind_addr  = IP 
 
 server {
   enabled          = true
   bootstrap_expect = 3
   server_join {
-    retry_join = [ "192.168.100.112", "192.168.100.113" ]
+    retry_join = [ SERVERS ]
     retry_max = 3
     retry_interval = "15s"
   }
