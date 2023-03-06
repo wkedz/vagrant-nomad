@@ -15,7 +15,7 @@ server {
 }
 
 client {
-  enabled = false
+  enabled = true 
   servers = ["127.0.0.1:4646"]
 
 
