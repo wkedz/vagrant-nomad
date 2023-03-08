@@ -3,6 +3,7 @@
                 
 Vagrant.configure('2') do |config|
     config.vm.box = "ubuntu/focal64"
+
     [:up, :provision].each do |cmd|
       config.trigger.before cmd do |trigger|
         trigger.run = {inline: "./scripts/host/setup.sh"}
