@@ -14,6 +14,12 @@ server {
 
 }
 
+advertise {
+  http = IP
+  rpc  = IP
+  serf = IP
+}
+
 client {
   enabled = true 
   servers = ["127.0.0.1:4646"]
